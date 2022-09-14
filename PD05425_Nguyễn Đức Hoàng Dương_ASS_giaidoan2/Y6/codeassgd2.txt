@@ -1,0 +1,104 @@
+.--- Liệt kê tất cả thông tin của các đầu sách gồm tên sách, mã sách, giá tiền , tác giả 
+.---thuộc loại sách có mã “IT”.
+
+select SACH.MASACH, SACH.TENSACH, SACH.GIA, SACH.MALOAI, SACH.TACGIA from SACH
+where SACH.MALOAI = 'IT'
+
+.---Liệt kê các phiếu mượn gồm các thông tin mã phiếu mượn, mã sách , ngày mượn, mã 
+.---sinh viên có ngày mượn trong tháng 01/2017.
+select PHIEUMUON.MAPM, CHITIETPHIEUMUON.MASACH, PHIEUMUON.NGAYMUON, PHIEUMUON.MASV
+from PHIEUMUON
+inner join CHITIETPHIEUMUON
+on PHIEUMUON.MAPM=CHITIETPHIEUMUON.MAPM
+where NGAYMUON like N'2020-01%'
+
+.--- Liệt kê các phiếu mượn chưa trả sách cho thư viên theo thứ tự tăng dần của ngày 
+.---mượn sách.
+select * from PHIEUMUON
+where TRANGTHAI like N'chưa%'
+order by NGAYMUON asc
+
+ .---Liệt kê tổng số đầu sách của mỗi loại sách ( gồm mã loại sách, tên loại sách, tổng số 
+.---lượng sách mỗi loại
+
+select LOAISACH.MALOAI, LOAISACH.TENLOAI, COUNT(LOAISACH.MALOAI) as'tổng số lượng mỗi loại' from LOAISACH
+inner join SACH
+on LOAISACH.MALOAI=SACH.MALOAI
+group by LOAISACH.MALOAI, LOAISACH.TENLOAI
+
+.---Đếm xem có bao nhiêu lượt sinh viên đã mượn sách
+select SINHVIEN.MASV, SINHVIEN.TENSV, COUNT(SINHVIEN.MASV) as'số lượt mượn' from PHIEUMUON
+inner join SINHVIEN
+on PHIEUMUON.MASV=SINHVIEN.MASV
+group by SINHVIEN.MASV, SINHVIEN.TENSV
+
+.---Hiển thị tất cả các quyển sách có tiêu đề chứa từ khoá “SQL”.
+select * from SACH
+where TENSACH like N'%Cơ Sở%'
+
+.--- Hiển thị thông tin mượn sách gồm các thông tin: mã sinh viên, tên sinh viên, mã 
+.---phiếu mượn, tiêu đề sách, ngày mượn, ngày trả. Sắp xếp thứ tự theo ngày mượn sách.
+
+select SINHVIEN.MASV, SINHVIEN.TENSV, PHIEUMUON.MAPM, PHIEUMUON.NGAYMUON, PHIEUMUON.NGAYTRA, SACH.TENSACH from SINHVIEN
+inner join PHIEUMUON
+on PHIEUMUON.MASV=SINHVIEN.MASV
+inner join CHITIETPHIEUMUON
+on PHIEUMUON.MAPM=CHITIETPHIEUMUON.MAPM
+inner join SACH
+on SACH.MASACH=CHITIETPHIEUMUON.MASACH
+order by NGAYMUON asc
+
+.---Liệt kê các đầu sách có lượt mượn lớn hơn hoặc bằng 8 lần
+
+ select SACH.MASACH ,  COUNT(CHITIETPHIEUMUON.MAPM) as'lượt mượn'  from SACH
+ inner join CHITIETPHIEUMUON
+ on SACH.MASACH=CHITIETPHIEUMUON.MASACH
+ group by Sach.MASACH
+ having COUNT(CHITIETPHIEUMUON.MAPM)>=8
+
+.---Viết câu lệnh cập nhật lại giá tiền của các quyển sách có ngày nhập kho trước năm 
+.---2015 giảm 30%
+
+UPDATE SACH
+SET GIA=GIA - GIA*0.3
+where Year(NGAYNHAPKHO) < (2015)
+
+.---Viết câu lệnh cập nhật lại trạng thái đã trả sách cho phiếu mượn của sinh viên có mã 
+.---sinh viên PD02730 (ví dụ).
+
+UPDATE  PHIEUMUON
+SET TRANGTHAI = N'Đã Trả'
+where MASV = 'PD02730'
+
+.---Lập danh sách các phiếu mượn quá hạn chưa trả gồm các thông tin: mã phiếu mượn, 
+.---tên sinh viên, email, danh sách các sách đã mượn, ngày mượn.
+
+select PHIEUMUON.MAPM, SINHVIEN.TENSV, PHIEUMUON.NGAYMUON, PHIEUMUON.NGAYTRA, PHIEUMUON.TRANGTHAI
+
+from PHIEUMUON
+inner join SINHVIEN
+on SINHVIEN.MASV=PHIEUMUON.MASV
+where TRANGTHAI like N'Chưa%' and DAte(PHIEUMUON) = '2020-04-20'
+
+ .---Viết câu lệnh cập nhật lại số lượng bản sao tăng lên 5 đơn vị đối với các đầu sách có 
+.---lượt mượn lớn hơn 10
+
+UPDATE SACH SET SOLUONG = SOLUONG+5
+ Where MASACH in (select SACH.MASACH from SACH
+ inner join CHITIETPHIEUMUON
+ on SACH.MASACH=CHITIETPHIEUMUON.MASACH
+ group by Sach.MASACH
+ having COUNT(CHITIETPHIEUMUON.MAPM)>=8)
+
+ .---Viết câu lệnh xoá các phiếu mượn có mã PM01
+delete PHIEUMUON
+where MAPM = 'PM01'
+
+alter table CHITIETPHIEUMUON
+ADD CONSTRAINT fk_CHITIETPHIEUMUON_MAPM
+foreign key(MAPM)
+references PHIEUMUON(MAPM) ON DELETE CASCADE
+
+
+
+

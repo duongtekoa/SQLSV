@@ -1,0 +1,100 @@
+B1
+. Xác định thực thể, thuộc tính , quan hệ thực thể
+
++Tập thực thể SÁCH(
+MÃ SÁCH, TIÊU ĐỀ, TÁC GIẢ, NHÀ XUẤT BẢN, SỐ TRANG, SỐ LƯỢNG BẢN SAO, GIÁ TIỀN
+NGÀY NHẬP KHO, VỊ TRÍ ĐẶT SÁCH, LOẠI SÁCH
+)
++Tập thực thể LOẠI SÁCH(
+MÃ LOẠI, TÊN LOẠI
+)
++Tập thực thể SINH VIÊN(
+MÃ SINH VIÊN, TÊN SINH VIÊN, NGÀY HẾT HẠN, CHUYÊN NGÀNH HỌC, 
+EMAIL, SỐ ĐIỆN THOẠI
+)
++Tập thực thể PHIẾU MƯỢN(
+MÃ PHIẾU MƯỢN, NGÀY MƯỢN, NGÀY TRẢ, MÃ SINH VIÊN, TÊN SINH VIÊN, 
+MÃ SÁCH, TÊN SÁCH, NHÀ XUẤT BẢN, GHI CHÚ
+)
+MỐI QUAN HỆ CHÍNH :1-1, 1-N, N-1, N-N
+
+
+B2
+
+vẽ ERD bằng  Diagram
+
+B3 MỨC VẬT LÍ
+
+BẢNG SÁCH
+
+MASACH                             varchar(10)  
+
+TIEUDE                               varchar(50)
+
+TACGIA                               varchar(50)
+
+NHAXUATBAN                       varchar(50)
+
+SOTRANG                            int
+
+SOLUONGBANSAO                  int
+
+GIATIEN                               float
+
+NGAYNHAPKHO                     date
+
+VITRI                                  varchar(50)
+
+MALOAI                               varchar(10)  
+
+BẢNG LOẠI SÁCH
+
+MALOAI                                varchar(10)                          PK
+
+TENLOAI                               varchar(50)
+
+BẢNG SINH VIEN
+
+MASINHVIEN                          varchar(10)                           PK
+
+TENSINHVIEN                         varchar(50)
+
+NGAYHETHAN                         date
+
+CHUYENNGANHHOC                  varchar(50)
+ 
+EMAIL                                   varchar(25)                          duongtkqn1999@gmail.com
+
+SODIENTHOAI                         varchar(15)                          01685632534
+
+BẢNG PHIẾU MƯỢN
+
+MAPHIEUMUON                       varchar(10) 
+
+NGAYMUON                            date
+
+NGAYTRA                              date
+
+MASINHVIEN                          varchar(10)
+
+TENSINHVIEN                         varchar(50)
+
+MASACH                               varchar(10)
+ 
+TENSACH                              varchar(50)    
+
+NHAXUATBAN                         varchar(50) 
+
+GHI CHU                                varchar(50) 
+  
+BẢNG CHI TIẾT PHIẾU MƯỢN
+
+MAPHIEUMUON                                                                     PK,FK
+
+MASACH                                                                             PK,FK                  
+
+GHI CHU                                varchar(50) 
+MASINHVIEN                          varchar(10)
+B4 VIẾT LỆNH ĐỂ TAO BANG CSDL
+
+
